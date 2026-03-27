@@ -1,0 +1,21 @@
+# 第一轮修改意见
+
+- 顺序可以调整一下，商量就是 knowledge.jpeg 这个是不是有点突兀？
+- 我觉得可以以 coding 开头，比如从 tab 到 agent 的演变，过渡到 AI 编程的自动驾驶等级，还能加入 AI 提需求，具体的内容你根据合理性重新考虑一下
+- query -> intent 这个，你没有展示一个高维向量在低维空间的投影这个概念，而且这个投影这个不符合第一性原理
+- 翻译这块，感觉目前列出来的部分有点意义不明，能不能有一个更好的表达方式？而且我觉得不需要讲什么最先冲击翻译行业
+- 我是 2025 年新年祝大家 tab 到底的，这里我会给两个朋友圈的截图。对于工具来说，其实是 tab -> tab tab -> agent
+- 关于 vibe coding，其实是一个建立信任的过程，和我们使用其他工具一样，可以想一想，基于 AI 编程的等级，我们现在在什么位置，瓶颈在哪里。不要提键盘厂商，我们离完全不需要打字还比较远。
+- Cursor 和 Claude Code 感觉还不至于同一个等级，我觉得。最近的 Cursor Glass 是往 Claude Code 的方向的一次追赶。核心就是淡化代码的实际变化，通过结果来增加信任。
+- Workflow 可以把 loop 效果做成动画，research -> plan -> implement -> review -> implement -> ...
+- 第一性原理：人是怎么理解一个项目的？技术书籍的作用是什么？那么当上下文依然有限，AI agents 应该怎么理解项目？
+- 注意：skill issue 其实是一个双关语。
+- 现在可以注意一下各个页面之间的脉络了，希望过度能自然一点
+- AI 味可以起一个 subagent，要求它写一个充满 AI 设计的网页，然后通过 Iframe 嵌入进来。我们说的是 AI design，不需要把 AI 味文案作为典型。
+- token, logits, model 有什么可视化表达的方法吗？希望能让人通过视觉快速理解。
+- Claude -> OpenClaw 这个你没理解，请参考：https://x.com/_justineo/status/2030085462635991383
+- Coding agent is General-Purpose Agent 这里，其实是说，coding 是一个 scale 的工具，Coding agent 不是只会 code，而是 code 会让他更高效地使用工具、处理通用问题。
+- 生活中的 AI，这一页感觉有点太无趣了，有没有更好的呈现方式？
+- NPC Dialogue 这个是想说什么？
+- emoji 猜电影，应该直接放一段 prompt，让大家自己也可以试。这个其实是一个很好的表达“翻译”、“knowledge.jpeg”的段落。
+- Claude Code 的 logo 不是 🦞
