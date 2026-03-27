@@ -14,7 +14,7 @@
     </style>
   </head>
   <body>
-    <div id="app">
+    <div id="app" style="opacity:0">
 
       <!-- ============================== 0. Title ============================== -->
       <section class="slide slide-title">
@@ -27,7 +27,7 @@
           <span style="left:85%;animation-delay:6s">🦀</span>
         </div>
         <div class="text-center" style="position:relative;z-index:1">
-          <div class="title-mega gradient-text">Working<br>with AI</div>
+          <div class="title-mega"><div class="title-carousel"><div class="title-carousel-track"><div class="gradient-text">Working</div><div class="gradient-text">Collaborating</div><div class="gradient-text">Playing</div><div class="gradient-text">Creating</div><div class="gradient-text">Thinking</div><div class="gradient-text">Working</div></div></div><span class="gradient-text">with AI</span></div>
           <div class="subtitle cn">只是我自己的实践，no best practice</div>
           <div class="cn dim mt-2" style="font-size:0.85rem">AI 进化速度太快，所有经验都只是暂时的<br>一切需要自己和 AI 磨合探索</div>
           <div class="meta-badge">← → 翻页 &nbsp;|&nbsp; 这个 slides 也是 AI 做的</div>
@@ -123,18 +123,19 @@
             <div class="comp-row current"><span class="comp-format">JPEG</span><div class="comp-bar" style="width:40%;background:var(--accent2)"></div><span class="comp-desc cn">LLM — 实用，但有损失</span></div>
           </div>
 
-          <div class="jpeg-demo mt-3" data-f="3">
-            <canvas id="jpeg-canvas"></canvas>
-            <div class="jpeg-slider-wrap">
-              <div class="mono dim" style="font-size:0.8rem">拖动 → 模拟不同模型的「压缩率」</div>
-              <input type="range" id="jpeg-slider" min="1" max="100" value="50">
-              <div id="jpeg-quality-label" class="mono accent jpeg-label-fixed">Quality:&nbsp;50% — 🧠 Claude-class</div>
+          <div class="jpeg-demo-overlay" data-f="3">
+            <div class="jpeg-demo">
+              <canvas id="jpeg-canvas"></canvas>
+              <div class="jpeg-slider-wrap">
+                <div class="mono dim" style="font-size:0.8rem">拖动 → 模拟不同模型的「压缩率」</div>
+                <input type="range" id="jpeg-slider" min="1" max="100" value="50">
+                <div id="jpeg-quality-label" class="mono accent jpeg-label-fixed">Quality:&nbsp;50% — 🧠 Claude-class</div>
+              </div>
             </div>
-          </div>
-
-          <div class="cn dim text-center mt-2" data-f="4" style="max-width:500px;font-size:0.88rem">
-            幻觉不是 bug — 是压缩率的代价<br>
-            <span class="accent">模型越大，精度越高</span>
+            <div class="cn dim text-center mt-2" style="max-width:500px;font-size:0.88rem">
+              幻觉不是 bug — 是压缩率的代价<br>
+              <span class="accent">模型越大，精度越高</span>
+            </div>
           </div>
         </div>
       </section>
@@ -506,7 +507,7 @@
             <div class="ai-taste-frame">
               <iframe id="ai-iframe" src="/ai-taste.html" class="ai-taste-iframe" title="AI taste demo"></iframe>
               <div class="ai-taste-toggle interactive">
-                <button class="taste-btn active" data-src="/ai-taste.html">AI 味</button>
+                <button class="taste-btn active" data-src="/ai-taste.html">Claude Code</button>
                 <button class="taste-btn" data-src="/no-ai-taste-2.html">OpenAI skill</button>
                 <button class="taste-btn" data-src="/no-ai-taste-3.html">Anthropic skill</button>
                 <button class="taste-btn" data-src="/no-ai-taste-4.html">Taste skill</button>
@@ -674,6 +675,7 @@
               <span class="tool-badge tool-badge-lg"><img src="/icons/viteplus.svg" class="tool-icon-lg" alt="">Vite+</span>
             </div>
             <div class="dim cn mt-2" style="font-size:0.8rem">策划 + 设计 + 实现 = 多轮对话 + 多次 review</div>
+            <a href="https://github.com/Justineo/working-with-ai" class="inline-link mono mt-2" style="font-size:0.75rem" target="_blank" rel="noopener">github.com/Justineo/working-with-ai ↗</a>
           </div>
         </div>
       </section>

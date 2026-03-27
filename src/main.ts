@@ -372,5 +372,14 @@ setupEmojiQuiz();
 setupAiTasteToggle();
 setupOverlay();
 
-// Remove FOUC guard
-document.getElementById("app")?.classList.add("ready");
+// Remove FOUC guard: double-rAF ensures initial state is fully painted
+// before enabling transitions and making app visible
+requestAnimationFrame(() => {
+  requestAnimationFrame(() => {
+    const app = document.getElementById("app");
+    if (app) {
+      app.style.opacity = "";
+      app.classList.add("ready");
+    }
+  });
+});
