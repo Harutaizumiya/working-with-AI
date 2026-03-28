@@ -41,14 +41,9 @@ function showFragmentsUpTo(slideIdx: number, n: number) {
   fragmentState.set(slideIdx, n);
 }
 
-// When entering a slide going forward, show 0 fragments (progressive)
-// When entering a slide going backward, show all fragments
-function enterSlide(slideIdx: number, direction: "forward" | "backward") {
-  if (direction === "forward") {
-    showFragmentsUpTo(slideIdx, 0);
-  } else {
-    showFragmentsUpTo(slideIdx, maxFragment(slideIdx));
-  }
+// When entering a slide, reset to initial state (0 fragments)
+function enterSlide(slideIdx: number) {
+  showFragmentsUpTo(slideIdx, 0);
 }
 
 function goto(index: number) {
@@ -63,7 +58,7 @@ function goto(index: number) {
   nextSlide.classList.add("active");
   const prevIdx = current;
   current = clamped;
-  enterSlide(clamped, direction);
+  enterSlide(clamped);
   updateProgress();
   setTimeout(
     () => slides[prevIdx].classList.remove("exit-left", "exit-right"),
@@ -98,6 +93,65 @@ function updateProgress() {
 }
 
 // ============================================================
+// Overview mode
+// ============================================================
+
+let overviewActive = false;
+
+function buildOverview() {
+  let container = document.getElementById("overview");
+  if (container) return container;
+  container = document.createElement("div");
+  container.id = "overview";
+  container.className = "overview";
+  document.getElementById("app")!.appendChild(container);
+
+  slides.forEach((slide, i) => {
+    const thumb = document.createElement("div");
+    thumb.className = "overview-thumb" + (i === current ? " current" : "");
+    thumb.dataset.index = String(i);
+
+    // Clone slide content into a scaled wrapper
+    const inner = document.createElement("div");
+    inner.className = "overview-inner";
+    inner.innerHTML = slide.innerHTML;
+    thumb.appendChild(inner);
+
+    // Label — extract slide title text for mobile
+    const label = document.createElement("div");
+    label.className = "overview-label";
+    const titleEl =
+      slide.querySelector(".title-mega") ||
+      slide.querySelector(".title-large");
+    const titleText = titleEl ? titleEl.textContent?.trim() ?? "" : "";
+    label.textContent = titleText
+      ? `${i + 1}. ${titleText}`
+      : `${i + 1}`;
+    thumb.appendChild(label);
+
+    thumb.addEventListener("click", () => {
+      toggleOverview(false);
+      goto(i);
+    });
+    container.appendChild(thumb);
+  });
+  return container;
+}
+
+function toggleOverview(show?: boolean) {
+  overviewActive = show ?? !overviewActive;
+  const container = buildOverview();
+
+  // Update current marker
+  container.querySelectorAll(".overview-thumb").forEach((el, i) => {
+    el.classList.toggle("current", i === current);
+  });
+
+  container.classList.toggle("active", overviewActive);
+  document.body.classList.toggle("overview-active", overviewActive);
+}
+
+// ============================================================
 // Navigation
 // ============================================================
 
@@ -107,32 +161,88 @@ document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closeOverlay();
     return;
   }
-  if (["ArrowRight", " ", "ArrowDown", "PageDown"].includes(e.key)) {
+
+  if (e.key === "Escape") {
     e.preventDefault();
-    advance();
-  } else if (["ArrowLeft", "ArrowUp", "PageUp"].includes(e.key)) {
+    toggleOverview();
+    return;
+  }
+
+  if (overviewActive) {
+    // In overview, arrows navigate the grid
+    if (["ArrowRight", "ArrowDown"].includes(e.key)) {
+      e.preventDefault();
+      const next = Math.min(current + 1, slides.length - 1);
+      goto(next);
+      const container = document.getElementById("overview");
+      container?.querySelectorAll(".overview-thumb").forEach((el, i) => {
+        el.classList.toggle("current", i === current);
+      });
+    } else if (["ArrowLeft", "ArrowUp"].includes(e.key)) {
+      e.preventDefault();
+      const prev = Math.max(current - 1, 0);
+      goto(prev);
+      const container = document.getElementById("overview");
+      container?.querySelectorAll(".overview-thumb").forEach((el, i) => {
+        el.classList.toggle("current", i === current);
+      });
+    } else if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      toggleOverview(false);
+    }
+    return;
+  }
+
+  // Normal slide mode
+  if (["ArrowRight", " ", "PageDown"].includes(e.key)) {
     e.preventDefault();
-    retreat();
+    goto(current + 1);
+  } else if (["ArrowLeft", "PageUp"].includes(e.key)) {
+    e.preventDefault();
+    goto(current - 1);
+  } else if (e.key === "ArrowDown") {
+    e.preventDefault();
+    // Fragment forward only (don't cross slides)
+    const cur = currentFragment(current);
+    const max = maxFragment(current);
+    if (cur < max) showFragmentsUpTo(current, cur + 1);
+  } else if (e.key === "ArrowUp") {
+    e.preventDefault();
+    // Fragment backward only (don't cross slides)
+    const cur = currentFragment(current);
+    if (cur > 0) showFragmentsUpTo(current, cur - 1);
   }
 });
 
 let touchStartX = 0;
+let touchStartY = 0;
 document.addEventListener("touchstart", (e) => {
   touchStartX = e.touches[0].clientX;
-});
+  touchStartY = e.touches[0].clientY;
+}, { passive: true });
 document.addEventListener("touchend", (e) => {
-  const diff = e.changedTouches[0].clientX - touchStartX;
-  if (Math.abs(diff) > 60) {
-    diff < 0 ? advance() : retreat();
+  const dx = e.changedTouches[0].clientX - touchStartX;
+  const dy = e.changedTouches[0].clientY - touchStartY;
+  const absDx = Math.abs(dx);
+  const absDy = Math.abs(dy);
+  if (Math.max(absDx, absDy) < 50) return; // too short
+
+  if (absDx > absDy && absDx > 60) {
+    // Horizontal swipe → switch slides
+    if (dx < 0) goto(current + 1);
+    else goto(current - 1);
   }
+  // Vertical swipe is left for native scroll on mobile
+  // Fragments are controlled via up/down keys or overview
 });
 
 document.addEventListener("click", (e) => {
+  if (overviewActive) return;
   const t = e.target as HTMLElement;
   if (t.closest("button, a, .interactive, input, iframe, .clickable")) return;
   const x = e.clientX / window.innerWidth;
-  if (x > 0.8) advance();
-  else if (x < 0.2) retreat();
+  if (x > 0.8) goto(current + 1);
+  else if (x < 0.2) goto(current - 1);
 });
 
 // ============================================================
@@ -342,8 +452,36 @@ function setupEmojiQuiz() {
 
 function setupAiTasteToggle() {
   const iframe = document.getElementById("ai-iframe") as HTMLIFrameElement;
+  const frame = iframe?.closest(".ai-taste-frame") as HTMLElement | null;
   const btns = document.querySelectorAll<HTMLButtonElement>(".taste-btn");
   if (!iframe || btns.length === 0) return;
+
+  // Scale iframe on mobile: render at desktop width, scale down to fit
+  function scaleIframe() {
+    if (!frame || !iframe) return;
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) {
+      const desktopW = 1000;
+      const desktopH = 450;
+      const availW = frame.parentElement!.clientWidth;
+      const scale = availW / desktopW;
+      iframe.style.width = desktopW + "px";
+      iframe.style.height = desktopH + "px";
+      iframe.style.transform = `scale(${scale})`;
+      iframe.style.transformOrigin = "top left";
+      frame.style.height = (desktopH * scale) + "px";
+      frame.style.overflow = "hidden";
+    } else {
+      iframe.style.width = "";
+      iframe.style.height = "";
+      iframe.style.transform = "";
+      iframe.style.transformOrigin = "";
+      frame.style.height = "";
+      frame.style.overflow = "";
+    }
+  }
+  scaleIframe();
+  window.addEventListener("resize", scaleIframe);
 
   btns.forEach((btn) => {
     btn.addEventListener("click", () => {
@@ -371,6 +509,20 @@ setupJpegDemo();
 setupEmojiQuiz();
 setupAiTasteToggle();
 setupOverlay();
+
+// Mobile nav bar
+document.getElementById("mnav-prev")?.addEventListener("click", () => goto(current - 1));
+document.getElementById("mnav-next")?.addEventListener("click", () => goto(current + 1));
+document.getElementById("mnav-up")?.addEventListener("click", () => {
+  const cur = currentFragment(current);
+  if (cur > 0) showFragmentsUpTo(current, cur - 1);
+});
+document.getElementById("mnav-down")?.addEventListener("click", () => {
+  const cur = currentFragment(current);
+  const max = maxFragment(current);
+  if (cur < max) showFragmentsUpTo(current, cur + 1);
+});
+document.getElementById("mnav-overview")?.addEventListener("click", () => toggleOverview());
 
 // Remove FOUC guard: double-rAF ensures initial state is fully painted
 // before enabling transitions and making app visible

@@ -30,7 +30,7 @@
           <div class="title-mega"><div class="title-carousel"><div class="title-carousel-track"><div class="gradient-text">Working</div><div class="gradient-text">Collaborating</div><div class="gradient-text">Playing</div><div class="gradient-text">Creating</div><div class="gradient-text">Thinking</div><div class="gradient-text">Working</div></div></div><span class="gradient-text">with AI</span></div>
           <div class="subtitle cn">只是我自己的实践，no best practice</div>
           <div class="cn dim mt-2" style="font-size:0.85rem">AI 进化速度太快，所有经验都只是暂时的<br>一切需要自己和 AI 磨合探索</div>
-          <div class="meta-badge">← → 翻页 &nbsp;|&nbsp; 这个 slides 也是 AI 做的</div>
+          <div class="meta-badge">← → 翻页 · ↑ ↓ 步进 · ESC 总览 &nbsp;|&nbsp; 这个 slides 也是 AI 做的</div>
         </div>
       </section>
 
@@ -94,7 +94,7 @@
             <div class="auto-level" data-f="2"><div class="level-badge" style="color:var(--accent3)">L1</div><div class="cn">行内自动补全</div><div class="level-tag"><img src="/icons/tabnine.png" class="tool-icon" alt="">TabNine · <img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot</div></div>
             <div class="auto-level" data-f="3"><div class="level-badge" style="color:var(--accent)">L2</div><div class="cn">代码片段生成 · IDE chat</div><div class="level-tag"><img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor</div></div>
             <div class="auto-level-divider cn" data-f="4">Byebye IDE 👋</div>
-            <div class="auto-level" data-f="5"><div class="level-badge" style="color:var(--accent2)">L3</div><div class="cn">Coding agent，人 review</div><div class="level-tag"><img src="/icons/claudecode-color.svg" class="tool-icon" alt="">Claude Code · <img src="/icons/codex-color.svg" class="tool-icon" alt="">Codex · <img src="/icons/opencode.svg" class="tool-icon invert" alt="">OpenCode</div></div>
+            <div class="auto-level" data-f="5"><div class="level-badge" style="color:var(--accent2)">L3</div><div class="cn">Coding agent，人 review</div><div class="level-tag"><img src="/icons/claudecode-color.svg" class="tool-icon" alt="">Claude Code · <img src="/icons/codex-color.svg" class="tool-icon" alt="">Codex · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor · <img src="/icons/opencode.svg" class="tool-icon invert" alt="">OpenCode</div></div>
             <div class="auto-level" data-f="6"><div class="level-badge" style="color:var(--accent2)">L4</div><div class="cn">Agent + AI review 完成项目</div><div class="level-tag dim"></div></div>
             <div class="auto-level-divider cn dim" data-f="7">Byebye Human 😅</div>
             <div class="auto-level" data-f="8"><div class="level-badge" style="color:var(--accent2)">L5</div><div class="cn">AI 工程团队，完全自主</div><div class="level-tag dim"></div></div>
@@ -527,7 +527,7 @@
         <div class="bg-grid"></div>
         <div class="text-center" style="position:relative;z-index:1">
           <div class="title-mega cn" style="font-size:clamp(2.5rem,6vw,4.5rem)"><span class="gradient-text">一些变化</span></div>
-          <div class="subtitle cn" data-f="1">用 AI 半年多之后，一些习惯和心态上的感受</div>
+          <div class="subtitle cn" data-f="1">深度使用 AI 之后，一些习惯和心态上的感受</div>
         </div>
       </section>
 
@@ -694,7 +694,16 @@
 
     <div id="progress"><div id="progress-bar"></div></div>
     <div id="slide-counter"></div>
-    <div class="nav-hint">← → 翻页 &nbsp;|&nbsp; swipe / click edges</div>
+    <div class="nav-hint">← → 翻页 &nbsp;|&nbsp; ↑ ↓ 步进 &nbsp;|&nbsp; ESC 总览</div>
+
+    <!-- Mobile navigation bar -->
+    <div id="mobile-nav" class="mobile-nav">
+      <button class="mobile-nav-btn" id="mnav-prev" aria-label="上一页">◀</button>
+      <button class="mobile-nav-btn" id="mnav-up" aria-label="上一步">▲</button>
+      <button class="mobile-nav-btn mobile-nav-overview" id="mnav-overview" aria-label="总览">⊞</button>
+      <button class="mobile-nav-btn" id="mnav-down" aria-label="下一步">▼</button>
+      <button class="mobile-nav-btn" id="mnav-next" aria-label="下一页">▶</button>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

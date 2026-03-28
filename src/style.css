@@ -282,14 +282,178 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px;
 .floating-symbols span { position:absolute; font-size:2rem; opacity:0.15; animation:floatUp 12s ease-in-out infinite; }
 @keyframes floatUp { 0% { transform:translateY(100vh) rotate(0deg); opacity:0; } 20% { opacity:0.15; } 80% { opacity:0.15; } 100% { transform:translateY(-10vh) rotate(360deg); opacity:0; } }
 
+/* Overview mode */
+.overview { position:absolute; inset:0; z-index:50; background:var(--bg); display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1rem; padding:2rem; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity .3s ease; align-content:start; }
+.overview.active { opacity:1; pointer-events:auto; }
+.overview-thumb { position:relative; aspect-ratio:16/10; border:2px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color .2s, transform .2s; background:var(--bg); }
+.overview-thumb:hover { border-color:var(--accent); transform:scale(1.03); }
+.overview-thumb.current { border-color:var(--accent2); box-shadow:0 0 12px rgba(239,106,154,0.3); }
+.overview-inner { transform:scale(0.18); transform-origin:top left; width:555%; height:555%; pointer-events:none; overflow:hidden; padding:3rem 5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+.overview-label { position:absolute; bottom:4px; right:6px; font-family:var(--font-mono); font-size:.65rem; color:var(--dim); background:rgba(10,10,15,0.7); padding:1px 5px; border-radius:3px; }
+body.overview-active #progress,
+body.overview-active #slide-counter,
+body.overview-active .nav-hint { opacity:0; pointer-events:none; }
+body.overview-active .mobile-nav-btn:not(.mobile-nav-overview) { opacity:0.3; pointer-events:none; }
+body.overview-active .mobile-nav-overview { color:var(--accent); }
+
+/* Mobile nav bar */
+.mobile-nav { display:none; }
+@media (max-width:768px) {
+  .mobile-nav { display:flex; position:fixed; bottom:0; left:0; right:0; z-index:100; justify-content:center; align-items:center; gap:0; background:rgba(10,10,15,0.85); backdrop-filter:blur(8px); border-top:1px solid var(--card-border); padding:6px 0; padding-bottom:max(6px,env(safe-area-inset-bottom)); }
+  .mobile-nav-btn { flex:1; max-width:72px; height:36px; border:none; background:transparent; color:var(--dim); font-size:1rem; cursor:pointer; display:flex; align-items:center; justify-content:center; transition:color .15s; -webkit-tap-highlight-color:transparent; }
+  .mobile-nav-btn:active { color:var(--accent); }
+  .mobile-nav-overview { color:var(--fg); font-size:1.1rem; }
+}
+
 /* Responsive */
 @media (max-width:768px) {
-  .slide { padding:2rem 1.5rem; }
+  /* Base: allow slides to scroll, reduce padding */
+  .slide { padding:1.5rem 1rem; justify-content:flex-start; padding-top:2rem; padding-bottom:4rem; -webkit-overflow-scrolling:touch; }
+  .slide.active { overflow-y:auto; }
+
+  /* Typography scale */
+  .title-mega { font-size:clamp(1.8rem,8vw,3.2rem); }
+  .title-large { font-size:clamp(1.2rem,5vw,2rem); }
+  .subtitle { font-size:clamp(0.75rem,2.5vw,1rem); }
+  .meta-badge { font-size:.55rem; padding:.3em .6em; }
+  .nav-hint { display:none; }
+  #progress { bottom:48px; }
+  #slide-counter { font-size:.55rem; bottom:56px; right:8px; }
+  .card { padding:.8rem 1rem; font-size:.85rem; }
+  .mt-3 { margin-top:1rem; }
+  .mt-4 { margin-top:1.5rem; }
+  .gap-3 { gap:1rem; }
+
+  /* Grid layouts → single column */
   .grid-2,.gp-cases,.tool-choice-grid { grid-template-columns:1fr; }
-  .evolution-steps,.workflow-flow,.skill-metaphor,.versus-visual,.research-modes,.tool-row { flex-direction:column; }
-  .evo-arrow,.skill-metaphor-arrow { transform:rotate(90deg); }
-  .jpeg-demo { flex-direction:column; }
-  .moments-compare .moment-card .moments-img { max-width:260px; }
-  .moments-compare .moment-overlay { margin-top:-4rem; }
-  .tool-row-card { max-width:none; width:100%; }
+
+  /* Flex layouts → stack vertically (except skill-metaphor & workflow-flow) */
+  .evolution-steps,.versus-visual,.research-modes,.tool-row,.tempad-flow { flex-direction:column; align-items:center; }
+  .evo-arrow,.research-mode-arrow,.versus-vs,.tempad-arrow { transform:rotate(90deg); font-size:1rem; }
+
+  /* ---- Slide 0: Title ---- */
+  .slide-title { justify-content:center; padding-top:1.5rem; }
+  .floating-symbols span { font-size:1.2rem; }
+  .title-carousel { height:1.1em; }
+
+  /* ---- Slide 1: Tab → Agent (moments + evolution) ---- */
+  .moments-img { max-width:280px; }
+  .moments-compare .moment-card .moments-img { max-width:220px; }
+  .moments-compare .moment-overlay { margin-top:-3rem; }
+  .evolution-steps { gap:.5rem; }
+  .evo-step { min-width:auto; max-width:none; width:100%; padding:.7rem 1rem; }
+  .evo-title { font-size:.95rem; }
+  .evo-desc { font-size:.8rem; }
+  .evo-tools { margin-top:.3rem; }
+  .tool-pill { font-size:.6rem; padding:.1em .4em; }
+  .tool-icon { width:12px; height:12px; vertical-align:-2px; }
+
+  /* ---- Slide 2: 自动驾驶等级 ---- */
+  .auto-levels { max-width:100%; gap:.3rem; }
+  .auto-level { grid-template-columns:2rem 1fr; font-size:.78rem; padding:.4rem .6rem; gap:.4rem; }
+  .auto-level .level-badge { font-size:.75rem; }
+  .auto-level .level-tag { grid-column:1/-1; text-align:left; font-size:.65rem; display:flex; flex-wrap:wrap; align-items:center; gap:2px; }
+  .auto-level-divider { font-size:.7rem; margin-left:.8rem; padding-left:.6rem; }
+
+  /* ---- Slide 3: knowledge.jpeg ---- */
+  .file-name { font-size:clamp(1.8rem,8vw,3.5rem); }
+  .compression-levels { max-width:100%; }
+  .comp-row { grid-template-columns:2.5rem 1fr auto; gap:.4rem; font-size:.72rem; }
+  .jpeg-demo-overlay { margin-top:-4rem; padding:1rem .5rem; }
+  .jpeg-demo { flex-direction:column; align-items:center; gap:1rem; }
+  .jpeg-demo canvas { width:85vw; height:56vw; max-width:360px; max-height:240px; }
+  .jpeg-slider-wrap { align-items:center; width:100%; }
+  .jpeg-label-fixed { min-width:auto; font-size:.65rem; text-align:center; }
+  input[type="range"] { width:75vw; max-width:260px; }
+
+  /* ---- Slide 4: 工具选择 ---- */
+  .tool-row { gap:.4rem; flex-direction:row; flex-wrap:wrap; justify-content:center; }
+  .tool-row-card { min-width:0; width:calc(50% - .4rem); max-width:none; padding:.5rem .6rem; }
+  .tool-row-icon img { width:24px !important; height:24px !important; }
+  .tool-row-card .cn { font-size:.82rem; }
+  .config-img { max-width:85vw !important; }
+
+  /* ---- Slide 5: Skills (keep horizontal) ---- */
+  .skill-metaphor { flex-direction:row; gap:.6rem; }
+  .skill-metaphor-arrow { transform:none; font-size:1.2rem; }
+  .skill-metaphor-item { min-width:0; flex:1; padding:.6rem .5rem; }
+  .skill-metaphor-item div[style*="font-size:2.5rem"] { font-size:1.5rem !important; }
+  .skill-metaphor-item .cn[style*="font-size:1rem"] { font-size:.8rem !important; }
+  .skill-metaphor-item .cn.dim { font-size:.7rem !important; }
+
+  /* ---- Slide 6: CLI vs MCP ---- */
+  .versus-card { min-width:auto; max-width:none; width:100%; padding:.8rem 1rem; }
+  .versus-label { font-size:1rem; margin-bottom:.3rem; }
+  .versus-flow { gap:.2rem; margin-bottom:.4rem; }
+  .versus-node { font-size:.75rem; padding:.2em .4em; }
+  .versus-edge { font-size:.7rem; }
+  .versus-tag { font-size:.6rem; }
+
+  /* ---- Slide 7: Workflow (keep horizontal, wrap) ---- */
+  .workflow-flow { flex-direction:row; flex-wrap:wrap; gap:.3rem; justify-content:center; }
+  .wf-arrow { transform:none; font-size:.8rem; }
+  .wf-phase { padding:.35rem .5rem; }
+  .wf-step { font-size:.72rem; gap:.2rem; }
+  .wf-icon { font-size:.75rem; }
+
+  /* ---- Slide 8: Research 双模式 ---- */
+  .research-mode-card { min-width:auto; max-width:none; width:100%; padding:1rem; }
+  .research-icon { width:24px; height:24px; }
+  .research-mode-label { font-size:.95rem; }
+
+  /* ---- Slide 9: Prompt 经验 ---- */
+  .prompt-cards { max-width:100%; gap:.4rem; }
+  .prompt-card { padding:.6rem .8rem; gap:.5rem; }
+  .prompt-num { font-size:1rem; min-width:1.8rem; }
+  .prompt-body { font-size:.78rem; }
+  .prompt-body strong { font-size:.9rem !important; }
+
+  /* ---- Slide 10-13: Section intros + showcase ---- */
+  .showcase-card { max-width:100%; padding:1rem; }
+  .showcase-label { font-size:.75rem; }
+  .showcase-desc { font-size:.85rem; }
+  .section-badge { font-size:.65rem; }
+
+  /* ---- Slide 14: AI 做设计 (JS handles iframe scale-down) ---- */
+  .ai-taste-demo { max-width:100%; }
+  .taste-btn { font-size:.65rem; padding:.3em .6em; }
+
+  /* ---- Slide 16: 信息获取 (intent funnel) ---- */
+  .intent-funnel { max-width:100%; }
+  .funnel-intent { font-size:.75rem; padding:.5rem .8rem; }
+  .funnel-split { grid-template-columns:1fr; gap:.6rem; }
+  .funnel-vs { padding-top:0; text-align:center; }
+  .funnel-output { font-size:.72rem; padding:.4rem .6rem; }
+  .funnel-pipe svg { max-height:28px; }
+
+  /* ---- Slide 18: AI 在生活中 ---- */
+  .gp-cases { grid-template-columns:1fr; gap:.4rem; }
+  .gp-case { padding:.5rem .7rem; }
+  .gp-case-title { font-size:.85rem; }
+  .gp-case .dim { font-size:.72rem; }
+
+  /* ---- Slide 19: Emoji quiz ---- */
+  .emoji-display { font-size:clamp(1.5rem,5vw,2.5rem); letter-spacing:.03em; word-break:break-all; line-height:1.4; }
+  .emoji-answer { font-size:1rem; }
+  .quiz-btn { font-size:.75rem; padding:.3em .8em; }
+  .chatgpt-link { font-size:.72rem; padding:.4em .8em; }
+
+  /* ---- Slide 20: Q&A ---- */
+  .outro-stack { gap:.6rem; }
+  .tool-badge-lg { font-size:.8rem; padding:.4em .8em; }
+
+  /* Habit (if used) */
+  .habit-item { flex-direction:column; gap:.3rem; text-align:center; }
+  .habit-before { text-align:center; }
+
+  /* Overview: 2-column grid, hide scaled content */
+  .overview { grid-template-columns:1fr 1fr; gap:.5rem; padding:1rem; padding-bottom:4rem; }
+  .overview-thumb { aspect-ratio:auto; height:auto; min-height:48px; display:flex; align-items:center; justify-content:center; }
+  .overview-inner { display:none; }
+  .overview-label { position:static; background:none; font-size:.85rem; color:var(--fg); padding:0; }
+
+  /* iframe overlay */
+  .iframe-overlay-content { width:95vw; height:85vh; border-radius:8px; }
+  .iframe-overlay-content.mobile { max-width:95vw; border-radius:24px; }
+  .iframe-close { width:28px; height:28px; font-size:.8rem; }
 }
