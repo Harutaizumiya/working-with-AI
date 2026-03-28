@@ -283,9 +283,9 @@ input[type="range"]::-webkit-slider-thumb { -webkit-appearance:none; width:16px;
 @keyframes floatUp { 0% { transform:translateY(100vh) rotate(0deg); opacity:0; } 20% { opacity:0.15; } 80% { opacity:0.15; } 100% { transform:translateY(-10vh) rotate(360deg); opacity:0; } }
 
 /* Overview mode */
-.overview { position:absolute; inset:0; z-index:50; background:var(--bg); display:grid; grid-template-columns:repeat(auto-fill,minmax(180px,1fr)); gap:1rem; padding:2rem; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity .3s ease; align-content:start; }
+.overview { position:fixed; inset:0; z-index:50; background:var(--bg); display:flex; flex-wrap:wrap; align-content:flex-start; gap:1rem; padding:2rem; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity .3s ease; }
 .overview.active { opacity:1; pointer-events:auto; }
-.overview-thumb { position:relative; aspect-ratio:16/10; border:2px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color .2s, transform .2s; background:var(--bg); }
+.overview-thumb { position:relative; aspect-ratio:16/10; width:calc((100% - 3rem) / 4); border:2px solid var(--card-border); border-radius:8px; overflow:hidden; cursor:pointer; transition:border-color .2s, transform .2s; background:var(--bg); flex-shrink:0; }
 .overview-thumb:hover { border-color:var(--accent); transform:scale(1.03); }
 .overview-thumb.current { border-color:var(--accent2); box-shadow:0 0 12px rgba(239,106,154,0.3); }
 .overview-inner { position:absolute; top:0; left:0; transform-origin:top left; pointer-events:none; overflow:hidden; padding:3rem 5rem; display:flex; flex-direction:column; align-items:center; justify-content:center; }
@@ -446,8 +446,9 @@ body.overview-active .mobile-nav-overview { color:var(--accent); }
   .habit-item { flex-direction:column; gap:.3rem; text-align:center; }
   .habit-before { text-align:center; }
 
-  /* Overview: two column scrollable grid */
-  .overview { grid-template-columns:1fr 1fr; gap:.5rem; padding:.5rem; padding-bottom:4rem; }
+  /* Overview: two column scrollable */
+  .overview { gap:.5rem; padding:.5rem; padding-bottom:4rem; }
+  .overview-thumb { width:calc((100% - .5rem) / 2); }
 
   /* iframe overlay */
   .iframe-overlay-content { width:95vw; height:85vh; border-radius:8px; }

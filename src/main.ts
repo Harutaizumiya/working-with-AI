@@ -89,7 +89,7 @@ function buildOverview() {
   container = document.createElement("div");
   container.id = "overview";
   container.className = "overview";
-  document.getElementById("app")!.appendChild(container);
+  document.body.appendChild(container);
 
   slides.forEach((slide, i) => {
     const thumb = document.createElement("div");
@@ -125,20 +125,20 @@ function buildOverview() {
   return container;
 }
 
-// Set overview-inner to fixed viewport dimensions and scale to fit thumb
+// Render overview-inner at a fixed "desktop" size, scale to fit thumb
+const REF_W = 1280;
+const REF_H = 800;
+
 function scaleOverviewThumbs(container: HTMLElement) {
-  const vw = window.innerWidth;
-  const vh = window.innerHeight;
   const thumbs = container.querySelectorAll<HTMLElement>(".overview-thumb");
   if (thumbs.length === 0) return;
-  // Need a rAF so thumbs have layout
   requestAnimationFrame(() => {
     const thumbW = thumbs[0].clientWidth;
     if (thumbW === 0) return;
-    const scale = thumbW / vw;
+    const scale = thumbW / REF_W;
     container.querySelectorAll<HTMLElement>(".overview-inner").forEach((inner) => {
-      inner.style.width = vw + "px";
-      inner.style.height = vh + "px";
+      inner.style.width = REF_W + "px";
+      inner.style.height = REF_H + "px";
       inner.style.transform = `scale(${scale})`;
     });
   });
