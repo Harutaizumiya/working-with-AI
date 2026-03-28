@@ -415,8 +415,10 @@ body.overview-active .mobile-nav-overview { color:var(--accent); }
   .section-badge { font-size:.65rem; }
 
   /* ---- Slide 14: AI 做设计 (JS handles iframe scale-down) ---- */
-  .ai-taste-demo { max-width:100%; }
-  .taste-btn { font-size:.65rem; padding:.3em .6em; }
+  .ai-taste-demo { max-width:100vw; width:100vw; margin-left:-1rem; padding:0; }
+  .ai-taste-frame { width:100%; }
+  .ai-taste-toggle { flex-wrap:wrap; justify-content:center; padding:0 .5rem; gap:0; }
+  .taste-btn { font-size:.6rem; padding:.3em .5em; white-space:nowrap; flex-shrink:0; }
 
   /* ---- Slide 16: 信息获取 (intent funnel) ---- */
   .intent-funnel { max-width:100%; }

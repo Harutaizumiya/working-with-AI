@@ -456,20 +456,20 @@ function setupAiTasteToggle() {
   const btns = document.querySelectorAll<HTMLButtonElement>(".taste-btn");
   if (!iframe || btns.length === 0) return;
 
-  // Scale iframe on mobile: render at desktop width, scale down to fit
+  // Scale iframe on mobile: render at desktop size, scale down to fill width
   function scaleIframe() {
     if (!frame || !iframe) return;
     const isMobile = window.innerWidth <= 768;
     if (isMobile) {
       const desktopW = 1000;
-      const desktopH = 450;
-      const availW = frame.parentElement!.clientWidth;
+      const desktopH = 600;
+      const availW = window.innerWidth;
       const scale = availW / desktopW;
       iframe.style.width = desktopW + "px";
       iframe.style.height = desktopH + "px";
       iframe.style.transform = `scale(${scale})`;
       iframe.style.transformOrigin = "top left";
-      frame.style.height = (desktopH * scale) + "px";
+      frame.style.height = Math.round(desktopH * scale) + "px";
       frame.style.overflow = "hidden";
     } else {
       iframe.style.width = "";
