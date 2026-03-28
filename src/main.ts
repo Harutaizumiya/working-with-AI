@@ -66,24 +66,6 @@ function goto(index: number) {
   );
 }
 
-function advance() {
-  const cur = currentFragment(current);
-  const max = maxFragment(current);
-  if (cur < max) {
-    showFragmentsUpTo(current, cur + 1);
-  } else {
-    goto(current + 1);
-  }
-}
-
-function retreat() {
-  const cur = currentFragment(current);
-  if (cur > 0) {
-    showFragmentsUpTo(current, cur - 1);
-  } else {
-    goto(current - 1);
-  }
-}
 
 function updateProgress() {
   const bar = document.getElementById("progress-bar") as HTMLElement | null;
