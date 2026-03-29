@@ -1,4 +1,5 @@
 import "./style.css";
+import { createFluidBackground } from "./fluid-background";
 
 // ============================================================
 // Slide engine with fragment support
@@ -6,9 +7,23 @@ import "./style.css";
 
 const slides = Array.from(document.querySelectorAll<HTMLElement>(".slide"));
 let current = 0;
+const background = createFluidBackground();
 
 // Fragment tracking: which fragment index is visible per slide
 const fragmentState = new Map<number, number>();
+
+function backgroundProgress(slideIdx: number) {
+  if (slides.length <= 1) return 0;
+  return slideIdx / (slides.length - 1);
+}
+
+function pulseBackground(value = 0.24) {
+  background.setImpulse(value);
+}
+
+function syncBackground(slideIdx: number) {
+  background.setProgress(backgroundProgress(slideIdx));
+}
 
 function getFragments(slideIdx: number): HTMLElement[] {
   return Array.from(
@@ -53,6 +68,13 @@ function goto(index: number, direction?: "forward" | "backward") {
   nextSlide.classList.add("active");
   const prevIdx = current;
   current = clamped;
+  background.triggerTransition({
+    from: backgroundProgress(prevIdx),
+    to: backgroundProgress(clamped),
+    direction: dir === "forward" ? 1 : -1,
+  });
+  syncBackground(clamped);
+  pulseBackground(0.7);
   // Forward → initial state (0 fragments); backward → fully played (all fragments)
   if (dir === "backward") {
     showFragmentsUpTo(clamped, maxFragment(clamped));
@@ -72,6 +94,7 @@ function stepForward() {
   const max = maxFragment(current);
   if (cur < max) {
     showFragmentsUpTo(current, cur + 1);
+    pulseBackground(0.22);
   } else {
     goto(current + 1, "forward");
   }
@@ -82,6 +105,7 @@ function stepBackward() {
   const cur = currentFragment(current);
   if (cur > 0) {
     showFragmentsUpTo(current, cur - 1);
+    pulseBackground(0.18);
   } else {
     goto(current - 1, "backward");
   }
@@ -144,6 +168,7 @@ function buildOverview() {
       toggleOverview(false);
       if (i === current) {
         showFragmentsUpTo(current, 0);
+        pulseBackground(0.16);
       } else {
         goto(i, "forward");
       }
@@ -201,6 +226,7 @@ document.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     e.preventDefault();
     toggleOverview();
+    pulseBackground(0.18);
     return;
   }
 
@@ -422,16 +448,19 @@ function setupEmojiQuiz() {
     teaser!.style.display = "none";
     game!.style.display = "flex";
     show();
+    pulseBackground(0.26);
   });
 
   reveal?.addEventListener("click", () => {
     answer!.textContent = movies[mIdx].answer;
     answer!.classList.add("revealed");
+    pulseBackground(0.14);
   });
 
   nextBtn?.addEventListener("click", () => {
     mIdx = (mIdx + 1) % movies.length;
     show();
+    pulseBackground(0.2);
   });
 
   // Copy prompt button
@@ -439,6 +468,7 @@ function setupEmojiQuiz() {
     navigator.clipboard.writeText(QUIZ_PROMPT).then(() => {
       const btn = document.getElementById("copy-prompt")!;
       btn.textContent = "已复制 ✓";
+      pulseBackground(0.12);
       setTimeout(() => {
         btn.textContent = "复制 Prompt";
       }, 2000);
@@ -491,6 +521,7 @@ function setupAiTasteToggle() {
         iframe.src = src;
         btns.forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
+        pulseBackground(0.2);
       }
     });
   });
@@ -505,6 +536,7 @@ if (slides.length > 0) {
   // Show all fragments on first slide by default (it's the title)
   showFragmentsUpTo(0, maxFragment(0));
 }
+syncBackground(0);
 updateProgress();
 setupJpegDemo();
 setupEmojiQuiz();
