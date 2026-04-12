@@ -168,6 +168,17 @@ code { font-family:var(--font-mono); background:rgba(124,106,239,0.15); padding:
 .prompt-num { font-family:var(--font-mono); font-weight:700; font-size:1.5rem; color:var(--accent); line-height:1; min-width:2.5rem; }
 .prompt-body { font-size:.95rem; }
 
+/* Agent / Prompt / Context */
+.concept-flow { display:grid; grid-template-columns:minmax(0,1fr) auto minmax(0,1fr) auto minmax(0,1fr); gap:1rem; width:100%; max-width:1080px; align-items:stretch; }
+.concept-card { display:flex; flex-direction:column; gap:.7rem; padding:1.2rem 1.4rem; background:var(--card-bg); border:1px solid var(--card-border); border-radius:16px; min-height:240px; }
+.concept-card-agent { border-color:rgba(124,106,239,0.35); background:linear-gradient(180deg, rgba(124,106,239,0.12), rgba(255,255,255,0.03)); box-shadow:0 16px 40px rgba(124,106,239,0.12); }
+.concept-kicker { font-size:.74rem; letter-spacing:.08em; text-transform:uppercase; color:var(--dim); }
+.concept-title { font-size:1.15rem; font-weight:700; line-height:1.35; }
+.concept-body { font-size:.92rem; color:var(--dim); line-height:1.7; flex:1; }
+.concept-tags { display:flex; flex-wrap:wrap; gap:.35rem; }
+.concept-arrow { display:flex; align-items:center; justify-content:center; font-size:1.7rem; color:var(--dim); font-family:var(--font-mono); }
+.concept-summary { background:linear-gradient(180deg, rgba(124,106,239,0.08), rgba(255,255,255,0.03)); }
+
 /* Showcase card (for "not just vibe coding" pages) */
 .showcase-card { padding:2rem; background:var(--card-bg); border:1px solid var(--card-border); border-radius:14px; text-align:center; max-width:500px; width:100%; cursor:pointer; transition:border-color .2s; }
 .showcase-card:hover { border-color:var(--accent); }
@@ -409,6 +420,15 @@ body.overview-active .mobile-nav-overview { color:var(--accent); }
   .prompt-num { font-size:1rem; min-width:1.8rem; }
   .prompt-body { font-size:.78rem; }
   .prompt-body strong { font-size:.9rem !important; }
+
+  /* ---- Agent / Prompt / Context ---- */
+  .concept-flow { grid-template-columns:1fr; gap:.55rem; max-width:100%; }
+  .concept-card { min-height:auto; padding:.85rem .95rem; gap:.45rem; }
+  .concept-title { font-size:.92rem; }
+  .concept-body { font-size:.76rem; line-height:1.55; }
+  .concept-tags { gap:.25rem; }
+  .concept-arrow { font-size:1rem; transform:rotate(90deg); min-height:16px; }
+  .concept-summary { font-size:.82rem !important; }
 
   /* ---- Slide 10-13: Section intros + showcase ---- */
   .showcase-card { max-width:100%; padding:1rem; }

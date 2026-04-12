@@ -84,6 +84,69 @@
         </div>
       </section>
 
+      <!-- ============================== Agent / Prompt / Context ============================== -->
+      <section class="slide">
+        <div class="flex-col gap-3" style="align-items:center">
+          <div class="title-large cn"><span class="gradient-text">Agent</span>、Prompt、Context</div>
+
+          <div class="concept-flow mt-2">
+            <div class="concept-card" data-f="1">
+              <div class="concept-kicker mono">Prompt</div>
+              <div class="concept-title cn">告诉 AI 现在要做什么</div>
+              <div class="concept-body cn">
+                目标、约束、验收标准、语气偏好
+              </div>
+              <div class="concept-tags">
+                <span class="tool-pill accent-pill">Goal</span>
+                <span class="tool-pill accent-pill">Constraint</span>
+                <span class="tool-pill accent-pill">Output</span>
+              </div>
+            </div>
+
+            <div class="concept-arrow" data-f="3">+</div>
+
+            <div class="concept-card" data-f="2">
+              <div class="concept-kicker mono">Context</div>
+              <div class="concept-title cn">告诉 AI 应该基于什么判断</div>
+              <div class="concept-body cn">
+                对话历史、代码库、文档、截图、环境状态
+              </div>
+              <div class="concept-tags">
+                <span class="tool-pill">History</span>
+                <span class="tool-pill">Codebase</span>
+                <span class="tool-pill">Docs</span>
+              </div>
+            </div>
+
+            <div class="concept-arrow accent" data-f="3">→</div>
+
+            <div class="concept-card concept-card-agent" data-f="3">
+              <div class="concept-kicker mono">Agent</div>
+              <div class="concept-title cn">自己拆解、行动、验证、继续推进</div>
+              <div class="concept-body cn">
+                不只是回答一句话，而是围绕目标持续工作直到完成
+              </div>
+              <div class="concept-tags">
+                <span class="tool-pill">Plan</span>
+                <span class="tool-pill">Act</span>
+                <span class="tool-pill">Review</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="concept-summary card cn text-center" data-f="4" style="max-width:760px;font-size:.95rem">
+            <span class="accent">Prompt</span> 决定方向，
+            <span class="accent3">Context</span> 决定判断质量，
+            <span class="accent2">Agent</span> 决定能不能把事情真正做完。
+          </div>
+
+          <div class="cn dim text-center" data-f="5" style="max-width:700px;font-size:.84rem">
+            同一个模型，换一份 prompt 或 context，表现就可能完全不同。<br>
+            真正稳定的体验，来自三者一起设计。
+          </div>
+        </div>
+      </section>
+
       <!-- ============================== 2. 自动驾驶等级 ============================== -->
       <section class="slide">
         <div class="flex-col gap-2" style="align-items:center">

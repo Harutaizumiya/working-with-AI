@@ -9,6 +9,7 @@
     "preview": "vp preview"
   },
   "devDependencies": {
+    "code-inspector-plugin": "^1.5.1",
     "typescript": "~6.0.0",
     "vite": "npm:@voidzero-dev/vite-plus-core@latest",
     "vite-plus": "latest"
