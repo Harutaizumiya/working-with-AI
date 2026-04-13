@@ -725,16 +725,16 @@
 
           <div class="gp-cases mt-2">
             <div class="gp-case cn" data-f="3">
-              <div class="gp-case-title">🩺 身体健康分析</div>
-              <div class="dim">ChatGPT · 通过身体原始数据分析身体健康状况</div>
+              <div class="gp-case-title">💻 自动化</div>
+              <div class="dim">用代码思维，把重复行为变成脚本</div>
             </div>
             <div class="gp-case cn" data-f="4">
-              <div class="gp-case-title">📝 创建个人简历</div>
-              <div class="dim">ChatGPT · 根据个人信息自动生成简历</div>
+              <div class="gp-case-title">📝 数据</div>
+              <div class="dim">帮你把生活数据变成可分析的系统，而不是一堆记录</div>
             </div>
             <div class="gp-case cn clickable" data-f="5" data-url="https://panyi-2026.justineo.me/pepper" data-mobile="true">
-              <div class="gp-case-title">🦞 私人助理</div>
-              <div class="dim">OpenClaw · 通过聊天自动化执行各种操作</div>
+              <div class="gp-case-title">🔧 工具</div>
+              <div class="dim">为一个问题，临时生成一个工具</div>
             </div>
             <div class="gp-case cn" data-f="6">
               <div class="gp-case-title">📊 这个 Slides</div>
@@ -744,47 +744,21 @@
         </div>
       </section>
 
-      <!-- ============================== 19. Emoji 猜影视作品 ============================== -->
-      <section class="slide">
-        <div class="text-center flex-col gap-3" style="align-items:center">
-          <div class="title-large cn">🎬 小游戏时间</div>
-
-          <div id="emoji-teaser" class="mt-2" data-f="1">
-            <div class="cn" style="font-size:1.1rem">准备好了吗？</div>
-            <button class="quiz-btn mt-2 interactive" id="emoji-start">开始！</button>
-          </div>
-
-          <div id="emoji-game" style="display:none" class="flex-col gap-2 text-center" data-f="1">
-            <div class="emoji-display" id="emoji-display"></div>
-            <div class="emoji-answer" id="emoji-answer">???</div>
-            <div class="flex-row gap-2 mt-1 interactive" style="justify-content:center">
-              <button class="quiz-btn" id="emoji-reveal">揭晓答案</button>
-              <button class="quiz-btn" id="emoji-next">下一题 →</button>
-            </div>
-          </div>
-
-          <div class="mt-3 cn dim" data-f="2" style="font-size:0.85rem">想自己玩？</div>
-          <div class="flex-row gap-2 interactive" data-f="2" style="justify-content:center">
-            <a id="chatgpt-quiz-link" href="#" class="chatgpt-link" target="_blank" rel="noopener">在 ChatGPT 里试试 ↗</a>
-            <button class="quiz-btn" id="copy-prompt">复制 Prompt</button>
-          </div>
-        </div>
-      </section>
-
-      <!-- ============================== 20. Q&A ============================== -->
+      <!-- ============================== 19. AI 这么强大，我们会不会失业？ ============================== -->
       <section class="slide slide-title">
         <div class="bg-grid"></div>
         <div class="text-center" style="position:relative;z-index:1">
-          <div class="title-mega gradient-text">Q & A</div>
-          <div class="subtitle cn mt-2">或者继续聊 AI 的任何话题</div>
-          <div class="outro-stack mt-4">
-            <div class="dim cn" style="font-size:0.85rem">这个 slides 是怎么做的？</div>
-            <div class="flex-row gap-2" style="flex-wrap:wrap;justify-content:center">
-              <span class="tool-badge tool-badge-lg"><img src="/icons/claudecode-color.svg" class="tool-icon-lg" alt="">Claude Code</span>
-              <span class="tool-badge tool-badge-lg"><img src="/icons/viteplus.svg" class="tool-icon-lg" alt="">Vite+</span>
-            </div>
-            <div class="dim cn mt-2" style="font-size:0.8rem">策划 + 设计 + 实现 = 多轮对话 + 多次 review</div>
-            <a href="https://github.com/Justineo/working-with-ai" class="inline-link mono mt-2" style="font-size:0.75rem" target="_blank" rel="noopener">github.com/Justineo/working-with-ai ↗</a>
+          <div class="title-mega cn" style="font-size:clamp(2.5rem,6vw,4.5rem)">AI 这么强大，<br><span class="gradient-text">我们会不会失业？</span></div>
+          <div class="subtitle cn mt-2" data-f="1">程序员面临的挑战</div>
+        </div>
+      </section>
+
+      <!-- ============================== 20. 我的观点 ============================== -->
+      <section class="slide">
+        <div class="flex-col gap-3" style="align-items:center;justify-content:center">
+          <div class="title-large cn">我的<span class="gradient-text">观点</span></div>
+          <div class="card cn text-center" data-f="1" style="max-width:760px;font-size:1.12rem">
+            做好准备，与时俱进
           </div>
         </div>
       </section>
