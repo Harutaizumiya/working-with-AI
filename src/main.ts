@@ -1,426 +1,61 @@
-import "./style.css";
+﻿import "./style.css";
+import "./styles/concept-demos.css";
+import { setupAiTasteToggle } from "./demos/ai-taste";
+import { setupConceptDemos } from "./demos/concept-demos";
+import { setupJpegDemo } from "./demos/jpeg-demo";
 import { createFluidBackground } from "./fluid-background";
+import { setupOverlay } from "./overlay";
+import { slidesMarkup } from "./slides/markup";
+import { setupSlideDeck } from "./slide-deck";
 
-// ============================================================
-// Slide engine with fragment support
-// ============================================================
+const app = document.getElementById("app");
+if (app) {
+  app.innerHTML = slidesMarkup;
+}
 
-const slides = Array.from(document.querySelectorAll<HTMLElement>(".slide"));
-let current = 0;
 const background = createFluidBackground();
-
-// Fragment tracking: which fragment index is visible per slide
-const fragmentState = new Map<number, number>();
-
-function backgroundProgress(slideIdx: number) {
-  if (slides.length <= 1) return 0;
-  return slideIdx / (slides.length - 1);
-}
-
-function pulseBackground(value = 0.24) {
-  background.setImpulse(value);
-}
-
-function syncBackground(slideIdx: number) {
-  background.setProgress(backgroundProgress(slideIdx));
-}
-
-function getFragments(slideIdx: number): HTMLElement[] {
-  return Array.from(
-    slides[slideIdx].querySelectorAll<HTMLElement>("[data-f]"),
-  ).sort((a, b) => Number(a.dataset.f) - Number(b.dataset.f));
-}
-
-function maxFragment(slideIdx: number): number {
-  const frags = getFragments(slideIdx);
-  if (frags.length === 0) return 0;
-  // Count unique fragment indices
-  const unique = new Set(frags.map((el) => Number(el.dataset.f)));
-  return unique.size;
-}
-
-function currentFragment(slideIdx: number): number {
-  return fragmentState.get(slideIdx) ?? 0;
-}
-
-function showFragmentsUpTo(slideIdx: number, n: number) {
-  const frags = getFragments(slideIdx);
-  // Get sorted unique fragment values
-  const vals = [...new Set(frags.map((el) => Number(el.dataset.f)))].sort(
-    (a, b) => a - b,
-  );
-  const visibleVals = new Set(vals.slice(0, n));
-  frags.forEach((el) => {
-    el.classList.toggle("f-visible", visibleVals.has(Number(el.dataset.f)));
-  });
-  fragmentState.set(slideIdx, n);
-}
-
-function goto(index: number, direction?: "forward" | "backward") {
-  const clamped = Math.max(0, Math.min(index, slides.length - 1));
-  if (clamped === current) return;
-  const dir = direction ?? (clamped > current ? "forward" : "backward");
-  const prevSlide = slides[current];
-  const nextSlide = slides[clamped];
-  prevSlide.classList.remove("active");
-  prevSlide.classList.add(dir === "forward" ? "exit-left" : "exit-right");
-  nextSlide.classList.remove("exit-left", "exit-right");
-  nextSlide.classList.add("active");
-  const prevIdx = current;
-  current = clamped;
-  background.triggerTransition({
-    from: backgroundProgress(prevIdx),
-    to: backgroundProgress(clamped),
-    direction: dir === "forward" ? 1 : -1,
-  });
-  syncBackground(clamped);
-  pulseBackground(0.7);
-  // Forward → initial state (0 fragments); backward → fully played (all fragments)
-  if (dir === "backward") {
-    showFragmentsUpTo(clamped, maxFragment(clamped));
-  } else {
-    showFragmentsUpTo(clamped, 0);
-  }
-  updateProgress();
-  setTimeout(
-    () => slides[prevIdx].classList.remove("exit-left", "exit-right"),
-    600,
-  );
-}
-
-// Step fragment forward; if at end, go to next slide
-function stepForward() {
-  const cur = currentFragment(current);
-  const max = maxFragment(current);
-  if (cur < max) {
-    showFragmentsUpTo(current, cur + 1);
-    pulseBackground(0.22);
-  } else {
-    goto(current + 1, "forward");
-  }
-}
-
-// Step fragment backward; if at start, go to previous slide
-function stepBackward() {
-  const cur = currentFragment(current);
-  if (cur > 0) {
-    showFragmentsUpTo(current, cur - 1);
-    pulseBackground(0.18);
-  } else {
-    goto(current - 1, "backward");
-  }
-}
-
-
-function updateProgress() {
-  const bar = document.getElementById("progress-bar") as HTMLElement | null;
-  if (bar) bar.style.width = `${((current + 1) / slides.length) * 100}%`;
-  const counter = document.getElementById("slide-counter");
-  if (counter) counter.textContent = `${current + 1} / ${slides.length}`;
-}
-
-// ============================================================
-// Overview mode
-// ============================================================
-
-let overviewActive = false;
-
-function buildOverview() {
-  let container = document.getElementById("overview");
-  if (container) {
-    scaleOverviewThumbs(container);
-    return container;
-  }
-  container = document.createElement("div");
-  container.id = "overview";
-  container.className = "overview";
-  document.body.appendChild(container);
-
-  slides.forEach((slide, i) => {
-    const thumb = document.createElement("div");
-    thumb.className = "overview-thumb" + (i === current ? " current" : "");
-    thumb.dataset.index = String(i);
-
-    // Clone slide content into a scaled wrapper, with all fragments visible
-    const inner = document.createElement("div");
-    inner.className = "overview-inner";
-    const clone = slide.cloneNode(true) as HTMLElement;
-    // Show all fragments in the clone
-    clone.querySelectorAll("[data-f]").forEach((el) => {
-      el.classList.add("f-visible");
-    });
-    inner.innerHTML = clone.innerHTML;
-    thumb.appendChild(inner);
-
-    // Label — extract slide title text for mobile
-    const label = document.createElement("div");
-    label.className = "overview-label";
-    const titleEl =
-      slide.querySelector(".title-mega") ||
-      slide.querySelector(".title-large");
-    const titleText = titleEl ? titleEl.textContent?.trim() ?? "" : "";
-    label.textContent = titleText
-      ? `${i + 1}. ${titleText}`
-      : `${i + 1}`;
-    thumb.appendChild(label);
-
-    thumb.addEventListener("click", () => {
-      toggleOverview(false);
-      if (i === current) {
-        showFragmentsUpTo(current, 0);
-        pulseBackground(0.16);
-      } else {
-        goto(i, "forward");
-      }
-    });
-    container.appendChild(thumb);
-  });
-
-  scaleOverviewThumbs(container);
-  return container;
-}
-
-// Render overview-inner at a fixed "desktop" size, scale to fit thumb
-const REF_W = 1280;
-const REF_H = 800;
-
-function scaleOverviewThumbs(container: HTMLElement) {
-  const thumbs = container.querySelectorAll<HTMLElement>(".overview-thumb");
-  if (thumbs.length === 0) return;
-  requestAnimationFrame(() => {
-    const thumbW = thumbs[0].clientWidth;
-    if (thumbW === 0) return;
-    const scale = thumbW / REF_W;
-    container.querySelectorAll<HTMLElement>(".overview-inner").forEach((inner) => {
-      inner.style.width = REF_W + "px";
-      inner.style.height = REF_H + "px";
-      inner.style.transform = `scale(${scale})`;
-    });
-  });
-}
-
-function toggleOverview(show?: boolean) {
-  overviewActive = show ?? !overviewActive;
-  const container = buildOverview();
-
-  // Update current marker
-  container.querySelectorAll(".overview-thumb").forEach((el, i) => {
-    el.classList.toggle("current", i === current);
-  });
-
-  container.classList.toggle("active", overviewActive);
-  document.body.classList.toggle("overview-active", overviewActive);
-}
-
-// ============================================================
-// Navigation
-// ============================================================
-
-document.addEventListener("keydown", (e) => {
-  const overlay = document.getElementById("iframe-overlay");
-  if (overlay && overlay.style.display !== "none") {
-    if (e.key === "Escape") closeOverlay();
-    return;
-  }
-
-  if (e.key === "Escape") {
-    e.preventDefault();
-    toggleOverview();
-    pulseBackground(0.18);
-    return;
-  }
-
-  if (overviewActive) {
-    // In overview, arrows navigate the grid
-    if (["ArrowRight", "ArrowDown"].includes(e.key)) {
-      e.preventDefault();
-      const next = Math.min(current + 1, slides.length - 1);
-      goto(next);
-      const container = document.getElementById("overview");
-      container?.querySelectorAll(".overview-thumb").forEach((el, i) => {
-        el.classList.toggle("current", i === current);
-      });
-    } else if (["ArrowLeft", "ArrowUp"].includes(e.key)) {
-      e.preventDefault();
-      const prev = Math.max(current - 1, 0);
-      goto(prev);
-      const container = document.getElementById("overview");
-      container?.querySelectorAll(".overview-thumb").forEach((el, i) => {
-        el.classList.toggle("current", i === current);
-      });
-    } else if (e.key === "Enter" || e.key === " ") {
-      e.preventDefault();
-      toggleOverview(false);
-    }
-    return;
-  }
-
-  // Normal slide mode
-  if (["ArrowRight", " ", "PageDown"].includes(e.key)) {
-    e.preventDefault();
-    goto(current + 1, "forward");
-  } else if (["ArrowLeft", "PageUp"].includes(e.key)) {
-    e.preventDefault();
-    goto(current - 1, "backward");
-  } else if (e.key === "ArrowDown") {
-    e.preventDefault();
-    stepForward();
-  } else if (e.key === "ArrowUp") {
-    e.preventDefault();
-    stepBackward();
-  }
+const overlay = setupOverlay();
+const { pulseBackground } = setupSlideDeck({
+  background,
+  closeOverlay: overlay.closeOverlay,
+  isOverlayOpen: overlay.isOpen,
 });
 
 // ============================================================
-// iframe overlay
-// ============================================================
-
-function openOverlay(url: string, mobile = false) {
-  const overlay = document.getElementById("iframe-overlay")!;
-  const content = overlay.querySelector(".iframe-overlay-content")!;
-  const iframe = document.getElementById("overlay-iframe") as HTMLIFrameElement;
-  iframe.src = url;
-  content.classList.toggle("mobile", mobile);
-  overlay.style.display = "flex";
-}
-
-function closeOverlay() {
-  const overlay = document.getElementById("iframe-overlay")!;
-  const iframe = document.getElementById("overlay-iframe") as HTMLIFrameElement;
-  overlay.style.display = "none";
-  iframe.src = "";
-}
-
-function setupOverlay() {
-  document
-    .getElementById("iframe-close")
-    ?.addEventListener("click", closeOverlay);
-  document
-    .querySelector(".iframe-overlay-bg")
-    ?.addEventListener("click", closeOverlay);
-
-  document
-    .querySelectorAll<HTMLElement>(".clickable[data-url]")
-    .forEach((el) => {
-      el.addEventListener("click", () => {
-        const url = el.dataset.url;
-        const mobile = el.dataset.mobile === "true";
-        if (url) openOverlay(url, mobile);
-      });
-    });
-}
-
-// ============================================================
-// JPEG compression demo
-// ============================================================
-
-function setupJpegDemo() {
-  const canvas = document.getElementById("jpeg-canvas") as HTMLCanvasElement;
-  if (!canvas) return;
-  const ctx = canvas.getContext("2d")!;
-  const slider = document.getElementById("jpeg-slider") as HTMLInputElement;
-  const label = document.getElementById("jpeg-quality-label");
-
-  const W = 600;
-  const H = 400;
-  canvas.width = W;
-  canvas.height = H;
-
-  // Load the gorilla photo as source
-  const srcImg = new Image();
-  srcImg.src = "/mike-arney-gorilla.jpg";
-
-  function drawOriginal() {
-    ctx.drawImage(srcImg, 0, 0, W, H);
-  }
-
-  let rafId = 0;
-  function compress(quality: number) {
-    cancelAnimationFrame(rafId);
-    rafId = requestAnimationFrame(() => {
-      drawOriginal();
-      const url = canvas.toDataURL("image/jpeg", quality);
-      const im = new Image();
-      im.onload = () => {
-        ctx.clearRect(0, 0, W, H);
-        ctx.drawImage(im, 0, 0);
-      };
-      im.src = url;
-    });
-  }
-
-  const stops: [number, string][] = [
-    [5, "📱 小模型 — 能聊，但经常离谱"],
-    [20, "💻 中等模型 — 基本可用"],
-    [45, "🖥️ 大模型 — 相当靠谱"],
-    [65, "🧠 Claude-class"],
-    [85, "🏆 Frontier — 接近无损"],
-    [100, "🌌 人脑（理论上限）"],
-  ];
-
-  function updateLabel(v: number) {
-    if (label) {
-      let best = stops[0];
-      for (const s of stops) {
-        if (Math.abs(s[0] - v) < Math.abs(best[0] - v)) best = s;
-      }
-      const vStr = String(v).padStart(3, "\u2007");
-      label.innerHTML = `Quality:&nbsp;${vStr}% — ${best[1]}`;
-    }
-  }
-
-  slider?.addEventListener("input", () => {
-    const v = Number(slider.value);
-    // Steep curve: accelerate decay so 60%+ still shows visible difference
-    const quality = Math.max(0.01, (v / 100) ** 4);
-    compress(quality);
-    updateLabel(v);
-  });
-
-  // Start after image loads
-  srcImg.onload = () => {
-    const v = Number(slider?.value ?? 50);
-    const quality = Math.max(0.01, (v / 100) ** 4);
-    compress(quality);
-    updateLabel(v);
-  };
-}
-
-// ============================================================
-// Emoji quiz (影视作品)
+// Emoji quiz
 // ============================================================
 
 const movies = [
   {
-    emoji: "🏙️💤🔄🌀🏨🎯🔫💼🧊🌊🏔️🔑🎲🕰️🪞🚂🌉👤🎭⏱️🏗️💉",
+    emoji: "🌀🏙️😴🧠🧳⏳❄️🚐🌊🔫",
     answer: "盗梦空间 Inception",
   },
   {
-    emoji: "👨‍🚀🌽🕳️📚⏰👨‍👧🌊🪐🚀🏠📻🌌🤖💧🧊🕰️👴📊🛰️🌑🔭⏳",
+    emoji: "🚀🌽🪐⌛👨‍👧📚🌊🕳️✨📡",
     answer: "星际穿越 Interstellar",
   },
   {
-    emoji: "🎸💀🌺🇲🇽👦🐕🌉🎶💜🦴🎭👴📸🌮🎺🕯️👻🌼🎪🦋💛🌅",
+    emoji: "🎸💀🌼👵🕯️🎤👦🌉🎶🧡",
     answer: "寻梦环游记 Coco",
   },
   {
-    emoji: "☄️🏙️🏔️👧👦🔄💫🎀📱✨🌅💧🕐🗾🎐🧵🌸💕🚃🔔🌌🪢",
+    emoji: "☄️📱🧵🏞️🏫💧🌙📝🔁💞",
     answer: "你的名字 Your Name",
   },
   {
-    emoji: "🦑🎮👔💸🔴🟢🪆🍬📐🔫🦺🛏️🪜🎭💀⭕🔺🟥💉🌉🏆💰",
+    emoji: "🦑🎮🟢🔺🟥💰😱🍬⚰️👀",
     answer: "鱿鱼游戏 Squid Game",
   },
   {
-    emoji: "🦇🃏🏙️💣🔥🚔🏥💰🎭🪙🤡🚗💀🏢🗡️⚖️🌃🦸‍♂️🚁📞🎪🌑",
+    emoji: "🦇🌃🃏🔥🚓💣⚖️🛵🕶️🃟",
     answer: "蝙蝠侠：黑暗骑士 The Dark Knight",
   },
-];
+] as const;
 
 let mIdx = 0;
 
 const QUIZ_PROMPT =
-  "我们来玩 emoji 猜影视作品。规则：1. 你只能用 emoji 输出，不能用文字，除非我说放弃当前题目。2. 每部作品用 22 个 emoji 表达一个经典桥段。3. 我猜对了自动下一题，猜错了给提示。选择要跳跃一点。";
+  "我们来玩 emoji 猜影视作品。规则：1. 你只能用 emoji 输出，不能用文字，除非我说放弃当前题目。2. 每部作品用一组 emoji 表达一个经典桥段。3. 我猜对了自动下一题，猜错了给提示。";
 
 function setupEmojiQuiz() {
   const display = document.getElementById("emoji-display");
@@ -430,30 +65,33 @@ function setupEmojiQuiz() {
   const startBtn = document.getElementById("emoji-start");
   const teaser = document.getElementById("emoji-teaser");
   const game = document.getElementById("emoji-game");
-  if (!display) return;
+  if (!display || !answer || !teaser || !game) return;
+  const displayEl = display;
+  const answerEl = answer;
+  const teaserEl = teaser;
+  const gameEl = game;
 
-  // Set ChatGPT link href
-  const chatLink = document.getElementById("chatgpt-quiz-link") as HTMLAnchorElement;
+  const chatLink = document.getElementById("chatgpt-quiz-link") as HTMLAnchorElement | null;
   if (chatLink) {
     chatLink.href = `https://chatgpt.com/?q=${encodeURIComponent(QUIZ_PROMPT)}`;
   }
 
   function show() {
-    display!.textContent = movies[mIdx].emoji;
-    answer!.textContent = "???";
-    answer!.classList.remove("revealed");
+    displayEl.textContent = movies[mIdx].emoji;
+    answerEl.textContent = "???";
+    answerEl.classList.remove("revealed");
   }
 
   startBtn?.addEventListener("click", () => {
-    teaser!.style.display = "none";
-    game!.style.display = "flex";
+    teaserEl.style.display = "none";
+    gameEl.style.display = "flex";
     show();
     pulseBackground(0.26);
   });
 
   reveal?.addEventListener("click", () => {
-    answer!.textContent = movies[mIdx].answer;
-    answer!.classList.add("revealed");
+    answerEl.textContent = movies[mIdx].answer;
+    answerEl.classList.add("revealed");
     pulseBackground(0.14);
   });
 
@@ -463,66 +101,16 @@ function setupEmojiQuiz() {
     pulseBackground(0.2);
   });
 
-  // Copy prompt button
   document.getElementById("copy-prompt")?.addEventListener("click", () => {
     navigator.clipboard.writeText(QUIZ_PROMPT).then(() => {
-      const btn = document.getElementById("copy-prompt")!;
+      const btn = document.getElementById("copy-prompt");
+      if (!btn) return;
+
       btn.textContent = "已复制 ✓";
       pulseBackground(0.12);
-      setTimeout(() => {
+      window.setTimeout(() => {
         btn.textContent = "复制 Prompt";
       }, 2000);
-    });
-  });
-}
-
-// ============================================================
-// AI taste toggle
-// ============================================================
-
-function setupAiTasteToggle() {
-  const iframe = document.getElementById("ai-iframe") as HTMLIFrameElement;
-  const frame = iframe?.closest(".ai-taste-frame") as HTMLElement | null;
-  const btns = document.querySelectorAll<HTMLButtonElement>(".taste-btn");
-  if (!iframe || btns.length === 0) return;
-
-  // Scale iframe on mobile: render at desktop size, scale down to fill width
-  function scaleIframe() {
-    if (!frame || !iframe) return;
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile) {
-      // Portrait ratio for mobile, leave room for buttons below
-      const refW = 430;
-      const refH = 580;
-      const availW = window.innerWidth;
-      const scale = availW / refW;
-      iframe.style.width = refW + "px";
-      iframe.style.height = refH + "px";
-      iframe.style.transform = `scale(${scale})`;
-      iframe.style.transformOrigin = "top left";
-      frame.style.height = Math.round(refH * scale) + "px";
-      frame.style.overflow = "hidden";
-    } else {
-      iframe.style.width = "";
-      iframe.style.height = "";
-      iframe.style.transform = "";
-      iframe.style.transformOrigin = "";
-      frame.style.height = "";
-      frame.style.overflow = "";
-    }
-  }
-  scaleIframe();
-  window.addEventListener("resize", scaleIframe);
-
-  btns.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const src = btn.dataset.src;
-      if (src) {
-        iframe.src = src;
-        btns.forEach((b) => b.classList.remove("active"));
-        btn.classList.add("active");
-        pulseBackground(0.2);
-      }
     });
   });
 }
@@ -531,24 +119,10 @@ function setupAiTasteToggle() {
 // Init
 // ============================================================
 
-if (slides.length > 0) {
-  slides[0].classList.add("active");
-  // Show all fragments on first slide by default (it's the title)
-  showFragmentsUpTo(0, maxFragment(0));
-}
-syncBackground(0);
-updateProgress();
 setupJpegDemo();
 setupEmojiQuiz();
-setupAiTasteToggle();
-setupOverlay();
-
-// Mobile nav bar
-document.getElementById("mnav-prev")?.addEventListener("click", () => goto(current - 1, "backward"));
-document.getElementById("mnav-next")?.addEventListener("click", () => goto(current + 1, "forward"));
-document.getElementById("mnav-up")?.addEventListener("click", () => stepBackward());
-document.getElementById("mnav-down")?.addEventListener("click", () => stepForward());
-document.getElementById("mnav-overview")?.addEventListener("click", () => toggleOverview());
+setupAiTasteToggle(pulseBackground);
+setupConceptDemos();
 
 // Remove FOUC guard: double-rAF ensures initial state is fully painted
 // before enabling transitions and making app visible
