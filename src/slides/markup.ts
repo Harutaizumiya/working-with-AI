@@ -351,36 +351,36 @@
             <div class="prompt-card" data-f="1">
               <div class="prompt-num">01</div>
               <div class="prompt-body cn">
-                <strong style="font-size:1.05rem">基于第一性原理思考</strong><br>
-                <span class="dim">不要套用模式，从根本推导</span>
+                <strong style="font-size:1.05rem">先定义问题本身</strong><br>
+                <span class="dim">明确目标，找出真正要解决的矛盾。</span>
               </div>
             </div>
             <div class="prompt-card" data-f="2">
               <div class="prompt-num">02</div>
               <div class="prompt-body cn">
-                <strong style="font-size:1.05rem">从根源解决</strong><br>
-                <span class="dim">找到问题的本质，不是糊一层</span>
+                <strong style="font-size:1.05rem">发散性思考</strong><br>
+                <span class="dim">不要局限于已知的解决方案，尝试从不同角度和层面思考问题。</span>
               </div>
             </div>
             <div class="prompt-card" data-f="3">
               <div class="prompt-num">03</div>
               <div class="prompt-body cn">
-                <strong style="font-size:1.05rem">对我的思路保持中立</strong><br>
-                <span class="dim">不要假设我之前的做法是正确的，该挑战就挑战</span>
+                <strong style="font-size:1.05rem">主动校验我的假设</strong><br>
+                <span class="dim">把我的描述视为待验证信息。发现更优路径、错误前提或遗漏风险时，让AI直接提出修正建议。</span>
               </div>
             </div>
             <div class="prompt-card" data-f="4">
               <div class="prompt-num">04</div>
               <div class="prompt-body cn">
-                <strong style="font-size:1.05rem">先理解现有代码再动手</strong><br>
-                <span class="dim">不要还没读完就开始改，先搞清楚为什么这样写</span>
+                <strong style="font-size:1.05rem">写出计划书再动手</strong><br>
+                <span class="dim">扮演“项目经理”角色，先制定执行计划，审核通过后再开始实施。</span>
               </div>
             </div>
             <div class="prompt-card" data-f="5">
               <div class="prompt-num">05</div>
               <div class="prompt-body cn">
-                <strong style="font-size:1.05rem">相信 AI 的基础能力</strong><br>
-                <span class="dim">不限定文件路径，不给固定 context — 让 AI 自己去找、去判断</span>
+                <strong style="font-size:1.05rem">写结构文档</strong><br>
+                <span class="dim">每次完成阶段性任务后，生成项目结构文档，方便后续维护和理解。</span>
               </div>
             </div>
           </div>
@@ -388,6 +388,10 @@
           <div class="cn dim text-center mt-1" data-f="6" style="font-size:.85rem">
             多使用，对 AI 能干什么不能干什么有完整的感受<br>
             <span class="accent">对于 AI 擅长的 → 相信 AI</span>
+          </div>
+          <div class="showcase-card clickable mt-2" data-f="3" data-url="https://www.doubao.com/chat/38420959310461442">
+            <div class="showcase-label mono dim">der包</div>
+            <div class="showcase-desc cn">点击预览 ↗</div>
           </div>
         </div>
       </section>
