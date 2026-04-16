@@ -757,7 +757,7 @@
         <div class="flex-col gap-3" style="align-items:center;justify-content:center">
           <div class="title-large cn">我的<span class="gradient-text">观点</span></div>
           <div class="card cn text-center" data-f="1" style="max-width:760px;font-size:1.12rem">
-            做好准备，与时俱进
+            事在人为
           </div>
         </div>
       </section>
