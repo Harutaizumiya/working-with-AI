@@ -128,6 +128,29 @@
         </div>
       </section>
 
+      <!-- ============================== 2. 自动驾驶等级 ============================== -->
+      <section class="slide">
+        <div class="flex-col gap-2" style="align-items:center">
+          <div class="title-large cn">AI 编程的<span class="gradient-text">自动驾驶等级</span></div>
+
+          <div class="auto-levels mt-2">
+            <div class="auto-level" data-f="1"><div class="level-badge" style="color:#555">L0</div><div class="cn">完全人工</div><div class="level-tag dim">古法编程，非遗传承</div></div>
+            <div class="auto-level" data-f="2"><div class="level-badge" style="color:var(--accent3)">L1</div><div class="cn">行内自动补全</div><div class="level-tag"><img src="/icons/tabnine.png" class="tool-icon" alt="">TabNine · <img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot</div></div>
+            <div class="auto-level" data-f="3"><div class="level-badge" style="color:var(--accent)">L2</div><div class="cn">代码片段生成 · IDE chat</div><div class="level-tag"><img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor</div></div>
+            <div class="auto-level-divider cn" data-f="4">Byebye IDE 👋</div>
+            <div class="auto-level" data-f="5"><div class="level-badge" style="color:var(--accent2)">L3</div><div class="cn">Coding agent，人 review</div><div class="level-tag"><img src="/icons/claudecode-color.svg" class="tool-icon" alt="">Claude Code · <img src="/icons/codex-color.svg" class="tool-icon" alt="">Codex · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor · <img src="/icons/opencode.svg" class="tool-icon invert" alt="">OpenCode</div></div>
+            <div class="auto-level" data-f="6"><div class="level-badge" style="color:var(--accent2)">L4</div><div class="cn">Agent + AI review 完成项目</div><div class="level-tag dim"></div></div>
+            <div class="auto-level-divider cn dim" data-f="7">Byebye Human 😅</div>
+            <div class="auto-level" data-f="8"><div class="level-badge" style="color:var(--accent2)">L5</div><div class="cn">AI 工程团队，完全自主</div><div class="level-tag dim"></div></div>
+          </div>
+
+          <div class="card mt-2 cn text-center" data-f="9" style="max-width:650px;font-size:0.95rem">
+            L3 开始瓶颈变成 <span class="accent2">code review</span><br>
+            <span class="dim">信任还需要慢慢建立才能往 L4 发展</span>
+          </div>
+        </div>
+      </section>
+
       <!-- ============================== Agent / Prompt / Context ============================== -->
       <section class="slide">
         <div class="flex-col gap-3" style="align-items:center">
@@ -244,29 +267,6 @@
         </div>
       </section>
 
-      <!-- ============================== 2. 自动驾驶等级 ============================== -->
-      <section class="slide">
-        <div class="flex-col gap-2" style="align-items:center">
-          <div class="title-large cn">AI 编程的<span class="gradient-text">自动驾驶等级</span></div>
-
-          <div class="auto-levels mt-2">
-            <div class="auto-level" data-f="1"><div class="level-badge" style="color:#555">L0</div><div class="cn">完全人工</div><div class="level-tag dim">古法编程，非遗传承</div></div>
-            <div class="auto-level" data-f="2"><div class="level-badge" style="color:var(--accent3)">L1</div><div class="cn">行内自动补全</div><div class="level-tag"><img src="/icons/tabnine.png" class="tool-icon" alt="">TabNine · <img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot</div></div>
-            <div class="auto-level" data-f="3"><div class="level-badge" style="color:var(--accent)">L2</div><div class="cn">代码片段生成 · IDE chat</div><div class="level-tag"><img src="/icons/githubcopilot.svg" class="tool-icon invert" alt="">Copilot · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor</div></div>
-            <div class="auto-level-divider cn" data-f="4">Byebye IDE 👋</div>
-            <div class="auto-level" data-f="5"><div class="level-badge" style="color:var(--accent2)">L3</div><div class="cn">Coding agent，人 review</div><div class="level-tag"><img src="/icons/claudecode-color.svg" class="tool-icon" alt="">Claude Code · <img src="/icons/codex-color.svg" class="tool-icon" alt="">Codex · <img src="/icons/cursor.svg" class="tool-icon invert" alt="">Cursor · <img src="/icons/opencode.svg" class="tool-icon invert" alt="">OpenCode</div></div>
-            <div class="auto-level" data-f="6"><div class="level-badge" style="color:var(--accent2)">L4</div><div class="cn">Agent + AI review 完成项目</div><div class="level-tag dim"></div></div>
-            <div class="auto-level-divider cn dim" data-f="7">Byebye Human 😅</div>
-            <div class="auto-level" data-f="8"><div class="level-badge" style="color:var(--accent2)">L5</div><div class="cn">AI 工程团队，完全自主</div><div class="level-tag dim"></div></div>
-          </div>
-
-          <div class="card mt-2 cn text-center" data-f="9" style="max-width:650px;font-size:0.95rem">
-            L3 开始瓶颈变成 <span class="accent2">code review</span><br>
-            <span class="dim">信任还需要慢慢建立才能往 L4 发展</span>
-          </div>
-        </div>
-      </section>
-
       <!-- ============================== 3. knowledge.jpeg ============================== -->
       <!-- <section class="slide">
         <div class="text-center flex-col gap-3" style="align-items:center">
@@ -313,7 +313,7 @@
               </div>  
               <div class="research-mode-label accent">Context-free</div>
               <div class="cn" style="font-size:.95rem">
-                不带先入为主的 bias<br>
+                不先入为主地思考<br>
                 基于第一性原理调研
               </div>
               <div class="cn dim" style="font-size:.8rem">ChatGPT Deep Research</div>
@@ -389,7 +389,7 @@
             多使用，对 AI 能干什么不能干什么有完整的感受<br>
             <span class="accent">对于 AI 擅长的 → 相信 AI</span>
           </div>
-          <div class="showcase-card clickable mt-2" data-f="3" data-url="https://www.doubao.com/chat/38420959310461442">
+          <div class="showcase-card clickable mt-2" data-f="7" data-url="https://www.doubao.com/chat/38420959310461442">
             <div class="showcase-label mono dim">der包</div>
             <div class="showcase-desc cn">点击预览 ↗</div>
           </div>
