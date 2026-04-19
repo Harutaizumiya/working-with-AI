@@ -38,7 +38,17 @@ export function setupOverlay(): OverlayController {
       el.addEventListener("click", () => {
         const url = el.dataset.url;
         const mobile = el.dataset.mobile === "true";
-        if (url) openOverlay(url, mobile);
+        if (!url) return;
+
+        const openInNewPage =
+          /^https?:\/\//.test(url) && el.dataset.preview !== "overlay";
+
+        if (openInNewPage) {
+          window.open(url, "_blank", "noopener");
+          return;
+        }
+
+        openOverlay(url, mobile);
       });
     });
 

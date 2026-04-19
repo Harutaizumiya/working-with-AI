@@ -482,7 +482,7 @@
           <div class="title-large cn">我的 <span class="gradient-text">工具选择</span></div>
 
           <div class="tool-row mt-2">
-             <div class="tool-row-card" data-f="3">
+             <div class="tool-row-card" data-f="1">
               <div class="tool-row-icon"><img src="/icons/openai.svg" style="width:32px;height:32px" class="invert" alt=""></div>
               <div class="cn"><strong>ChatGPT</strong></div>
               <div class="cn dim" style="font-size:.82rem">Research</div>
@@ -492,7 +492,7 @@
               <div class="cn"><strong>Gemini</strong></div>
               <div class="cn dim" style="font-size:.82rem">创意工作</div>
             </div>
-            <div class="tool-row-card" data-f="1">
+            <div class="tool-row-card" data-f="3">
               <div class="tool-row-icon"><img src="/icons/codex-color.svg" style="width:32px;height:32px" alt=""></div>
               <div class="cn"><strong>Codex</strong></div>
               <div class="cn dim" style="font-size:.82rem">写代码</div>
@@ -580,7 +580,7 @@
             独立开发者不再受限于设计能力，可以专注于实现想法本身
           </div>
 
-          <div class="showcase-card clickable mt-2" data-f="3" data-url="https://www.doubao.com/code/chat/38421412237084418">
+          <div class="showcase-card clickable mt-2" data-f="3" data-url="https://www.doubao.com/code/chat/">
             <div class="showcase-label mono dim">der包</div>
             <div class="showcase-desc cn">点击预览 ↗</div>
           </div>
